@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Academy Pro - Interactive Learning Platform</title>
+    <link rel="stylesheet" href="abhi2.css">
+    
+
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <div class="datetime-display" id="datetimeDisplay">
+                <div class="date" id="currentDate">Loading...</div>
+                <div class="time" id="currentTime">Loading...</div>
+            </div>
+            <h1>🚀 AI Academy Pro</h1>
+            <p>Master Artificial Intelligence through Interactive Learning</p>
+            <div class="stats-bar">
+                <div class="stat">
+                    <div class="stat-number" id="totalTopics">12</div>
+                    <div class="stat-label">Topics</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="completedCount">0</div>
+                    <div class="stat-label">Completed</div>
+                </div>
+                <div class="stat">
+                    <div class="stat-number" id="accuracyScore">0%</div>
+                    <div class="stat-label">Progress</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="api-setup">
+            <h4>🔐 API Configuration</h4>
+            <p>Configure your AI services for the complete learning experience:</p>
+            <input type="password" id="openaiKey" class="api-input" placeholder="OpenAI API Key (GPT-4)">
+            <input type="password" id="geminiKey" class="api-input" placeholder="Google Gemini API Key">
+            <input type="password" id="elevenLabsKey" class="api-input" placeholder="ElevenLabs API Key (Voice)">
+            <button class="save-btn" onclick="saveApiKeys()">💾 Save Configuration</button>
+        </div>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="course-nav">
+                    <h3>📚 Learning Path</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="progress-text" id="progressText">0/12 modules completed</div>
+                    
+                    <div class="learning-path">
+                        <div class="path-title">🎯 Current Focus</div>
+                        <div id="currentFocus">Introduction to AI</div>
+                    </div>
+                    
+                    <div class="topic-list" id="topicList"></div>
+
+                    <div class="quick-actions">
+                        <button class="quick-btn" onclick="startExam()">📝 Start Exam</button>
+                        <button class="quick-btn" onclick="explainConcept()">🔍 Explain</button>
+                        <button class="quick-btn" onclick="showSummary()">📋 Summary</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="chat-container" id="chatContainer">
+                <div class="chat-header">
+                    <div class="chat-title">💬 AI Tutor Conversation</div>
+                    <div class="typing-indicator" id="typingIndicator">AI is thinking...</div>
+                </div>
+
+                <div class="chat-messages" id="chatMessages"></div>
+
+                <div class="input-section">
+                    <input type="text" 
+                           id="chatInput" 
+                           class="chat-input" 
+                           placeholder="Ask me anything about AI fundamentals..."
+                           onkeypress="handleKeyPress(event)">
+                    <button class="btn send-btn" onclick="sendMessage()">🚀 Send</button>
+                    <button class="btn voice-btn" id="voiceBtn" onclick="toggleVoiceRecording()">🎤 Voice</button>
+                </div>
+
+                <div class="voice-controls">
+                    <button class="btn speak-btn" onclick="speakLastMessage()">🔊 Speak</button>
+                    <button class="btn speak-btn" onclick="stopSpeaking()">⏹️ Stop</button>
+                </div>
+            </div>
+
+            <div class="ai-assistant">
+                <div class="assistant-header">🤖 AI Assistant</div>
+                
+                <div class="ai-status">
+                    <div class="status-indicator">
+                        <div class="status-dot"></div>
+                        <span>AI Ready</span>
+                    </div>
+                </div>
+
+                <div class="learning-path">
+                    <div class="path-title">📊 Your Progress</div>
+                    <div id="learningInsights">Welcome! Start your AI journey.</div>
+                </div>
+
+                <div class="learning-path">
+                    <div class="path-title">🎯 Recommendations</div>
+                    <div id="recommendations">
+                        <ul>
+                            <li>Start with basic AI concepts</li>
+                            <li>Practice with interactive examples</li>
+                            <li>Use exams to test your knowledge</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="quick-actions">
+                    <button class="quick-btn" onclick="resetProgress()">🔄 Reset</button>
+                    <button class="quick-btn" onclick="exportProgress()">📤 Export</button>
+                </div>
+            </div>
+            
+            <!-- Exam Container -->
+            <div class="exam-container" id="examContainer">
+                <div class="exam-header">
+                    <div class="exam-title" id="examTitle">AI Fundamentals Exam</div>
+                    <div class="exam-info">
+                        <div>Question: <span id="currentQuestion">1</span>/<span id="totalQuestions">10</span></div>
+                        <div>Time: <span id="examTimer">05:00</span></div>
+                    </div>
+                </div>
+                
+                <div class="exam-content">
+                    <div class="exam-main">
+                        <div class="exam-question">
+                            <div class="question-text" id="questionText"></div>
+                            <div class="exam-options" id="examOptions"></div>
+                        </div>
+                        
+                        <div class="exam-nav">
+                            <button class="nav-btn prev-btn" onclick="prevQuestion()">◀ Previous</button>
+                            <button class="nav-btn next-btn" onclick="nextQuestion()">Next ▶</button>
+                            <button class="nav-btn finish-btn" onclick="finishExam()">Finish Exam</button>
+                        </div>
+                    </div>
+                    
+                    <div class="exam-sidebar">
+                        <div class="exam-progress">
+                            <div class="progress-title">Progress</div>
+                            <div class="questions-grid" id="questionsGrid"></div>
+                        </div>
+                        
+                        <div class="timer-display" id="timerDisplay">
+                            <div>Time Remaining</div>
+                            <div id="countdown">05:00</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="exam-results" id="examResults">
+                    <div class="result-title" id="resultTitle">Exam Results</div>
+                    <div class="score-display" id="scoreDisplay">0%</div>
+                    <div class="result-message" id="resultMessage"></div>
+                    
+                    <div class="result-actions">
+                        <button class="action-btn review-btn" onclick="reviewAnswers()">Review Answers</button>
+                        <button class="action-btn retake-btn" onclick="retakeExam()">Retake Exam</button>
+                        <button class="action-btn continue-btn" onclick="continueLearning()">Continue Learning</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="abhi.js"></script>
+</body>
+</html>
